@@ -151,12 +151,21 @@ class quiz_overview_report extends quiz_attempts_report {
                         $a->groupname = groups_get_group_name($currentgroup);
                         $a->coursestudents = get_string('participants');
                         $a->countregradeneeded = $regradesneeded;
-                        $regradealldrydolabel =
+                        if ($currentgroup == -3) {
+                            $regradealldrydolabel =
+                                get_string('regradealldrydonotgroupmembers', 'quiz_overview', $a);
+                            $regradealldrylabel =
+                                get_string('regradealldrynotgroupmembers', 'quiz_overview', $a);
+                            $regradealllabel =
+                                get_string('regradeallnotgroupmembers', 'quiz_overview', $a);
+                        } else {
+                            $regradealldrydolabel =
                                 get_string('regradealldrydogroup', 'quiz_overview', $a);
-                        $regradealldrylabel =
+                            $regradealldrylabel =
                                 get_string('regradealldrygroup', 'quiz_overview', $a);
-                        $regradealllabel =
+                            $regradealllabel =
                                 get_string('regradeallgroup', 'quiz_overview', $a);
+                        }
                     } else {
                         $regradealldrydolabel =
                                 get_string('regradealldrydo', 'quiz_overview', $regradesneeded);
@@ -239,8 +248,12 @@ class quiz_overview_report extends quiz_attempts_report {
                         $params)) {
                     $imageurl = new moodle_url('/mod/quiz/report/overview/overviewgraph.php',
                             array('id' => $quiz->id, 'groupid' => $currentgroup));
-                    $graphname = get_string('overviewreportgraphgroup', 'quiz_overview',
+                    if ($currentgroup == -3) {
+                        $graphname = get_string('overviewreportgraphnotgroupmembers', 'quiz_overview');
+                    } else {
+                        $graphname = get_string('overviewreportgraphgroup', 'quiz_overview',
                             groups_get_group_name($currentgroup));
+                    }
                     echo $output->graph($imageurl, $graphname);
                 }
             }

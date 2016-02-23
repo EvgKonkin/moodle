@@ -846,7 +846,7 @@ function data_add_record($data, $groupid=0){
     $record = new stdClass();
     $record->userid = $USER->id;
     $record->dataid = $data->id;
-    $record->groupid = $groupid;
+    $record->groupid = ($groupid == -3) ? 0 : $groupid;
     $record->timecreated = $record->timemodified = time();
     if (has_capability('mod/data:approve', $context)) {
         $record->approved = 1;
@@ -2168,7 +2168,7 @@ function data_user_can_add_entry($data, $currentgroup, $groupmode, $context = nu
         return true;
     }
 
-    if ($currentgroup) {
+    if ($currentgroup and $currentgroup != -3) {
         return groups_is_member($currentgroup);
     } else {
         //else it might be group 0 in visible mode

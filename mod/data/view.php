@@ -338,7 +338,7 @@
     $canmanageentries = has_capability('mod/data:manageentries', $context);
     // If a student is not part of a group and seperate groups is enabled, we don't
     // want them seeing all records.
-    if ($currentgroup == 0 && $groupmode == 1 && !$canmanageentries) {
+    if (($currentgroup == 0 || $currentgroup == -3) && $groupmode == 1 && !$canmanageentries) {
         $canviewallrecords = false;
     } else {
         $canviewallrecords = true;

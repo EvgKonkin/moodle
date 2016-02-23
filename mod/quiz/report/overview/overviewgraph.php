@@ -41,14 +41,20 @@ require_capability('mod/quiz:viewreports', $modcontext);
 
 if ($groupid && $groupmode = groups_get_activity_groupmode($cm)) {
     // Groups are being used.
-    $groups = groups_get_activity_allowed_groups($cm);
-    if (!array_key_exists($groupid, $groups)) {
-        print_error('errorinvalidgroup', 'group', null, $groupid);
-    }
-    $group = $groups[$groupid];
-    $groupusers = get_users_by_capability($modcontext,
+    if ($groupid == -3) {
+        $groupusers = get_users_by_capability($modcontext,
+            array('mod/quiz:reviewmyattempts', 'mod/quiz:attempt'),
+            '', '', '', '', $groupid, '', false);
+    } else {
+        $groups = groups_get_activity_allowed_groups($cm);
+        if (!array_key_exists($groupid, $groups)) {
+            print_error('errorinvalidgroup', 'group', null, $groupid);
+        }
+        $group = $groups[$groupid];
+        $groupusers = get_users_by_capability($modcontext,
             array('mod/quiz:reviewmyattempts', 'mod/quiz:attempt'),
             '', '', '', '', $group->id, '', false);
+    }
     if (!$groupusers) {
         print_error('nostudentsingroup');
     }

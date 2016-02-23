@@ -73,6 +73,9 @@ function wiki_get_subwikis($wikiid) {
  */
 function wiki_get_subwiki_by_group($wikiid, $groupid, $userid = 0) {
     global $DB;
+    if ($groupid == -3) {
+        $groupid = 0;
+    }
     return $DB->get_record('wiki_subwikis', array('wikiid' => $wikiid, 'groupid' => $groupid, 'userid' => $userid));
 }
 

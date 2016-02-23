@@ -47,15 +47,16 @@ require_login($quiz->course, false, $cm);
 $modcontext = context_module::instance($cm->id);
 require_capability('quiz/statistics:view', $modcontext);
 
-if (groups_get_activity_groupmode($cm)) {
-    $groups = groups_get_activity_allowed_groups($cm);
-} else {
-    $groups = array();
+if ($currentgroup != -3) {
+    if (groups_get_activity_groupmode($cm)) {
+        $groups = groups_get_activity_allowed_groups($cm);
+    } else {
+        $groups = array();
+    }
+    if ($currentgroup && !in_array($currentgroup, array_keys($groups))) {
+        print_error('groupnotamember', 'group');
+    }
 }
-if ($currentgroup && !in_array($currentgroup, array_keys($groups))) {
-    print_error('groupnotamember', 'group');
-}
-
 if (empty($currentgroup)) {
     $groupstudents = array();
 } else {

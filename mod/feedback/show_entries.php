@@ -152,7 +152,7 @@ if ($do_show == 'showentries') {
 
         //get students in conjunction with groupmode
         if ($groupmode > 0) {
-            if ($mygroupid > 0) {
+            if ($mygroupid > 0 or $mygroupid == -3) {
                 $usedgroupid = $mygroupid;
             } else {
                 $usedgroupid = false;

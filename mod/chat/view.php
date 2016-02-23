@@ -96,7 +96,7 @@ $currentgroup = groups_get_activity_group($cm, true);
 $params = array();
 if ($currentgroup) {
     $groupselect = " AND groupid = '$currentgroup'";
-    $groupparam = "_group{$currentgroup}";
+    $groupparam = ($currentgroup == -3) ? "_notgroupmember" : "_group{$currentgroup}";
     $params['groupid'] = $currentgroup;
 } else {
     $groupselect = "";

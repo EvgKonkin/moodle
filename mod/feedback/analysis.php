@@ -127,7 +127,7 @@ if (is_array($items)) {
     $items=array();
 }
 $check_anonymously = true;
-if ($mygroupid > 0 AND $feedback->anonymous == FEEDBACK_ANONYMOUS_YES) {
+if (($mygroupid > 0 or $mygroupid == -3) AND $feedback->anonymous == FEEDBACK_ANONYMOUS_YES) {
     if ($completedscount < FEEDBACK_MIN_ANONYMOUS_COUNT_IN_GROUP) {
         $check_anonymously = false;
     }
