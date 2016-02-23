@@ -2381,15 +2381,25 @@ function get_enrolled_sql(context $context, $withcapability = '', $groupid = 0, 
             }
 
             if ($groupid) {
-                $joins[] = "JOIN {groups_members} {$prefix}gm ON ({$prefix}gm.userid = {$prefix}u.id AND {$prefix}gm.groupid = :{$prefix}gmid)";
-                $params["{$prefix}gmid"] = $groupid;
+                if ($groupid == -3) {
+                    $joins[] = "LEFT JOIN {groups_members} {$prefix}gm ON {$prefix}gm.userid = {$prefix}u.id";
+                    $wheres[] = "{$prefix}gm.groupid IS NULL";
+                } else {
+                    $joins[] = "JOIN {groups_members} {$prefix}gm ON ({$prefix}gm.userid = {$prefix}u.id AND {$prefix}gm.groupid = :{$prefix}gmid)";
+                    $params["{$prefix}gmid"] = $groupid;
+                }
             }
         }
 
     } else {
         if ($groupid) {
-            $joins[] = "JOIN {groups_members} {$prefix}gm ON ({$prefix}gm.userid = {$prefix}u.id AND {$prefix}gm.groupid = :{$prefix}gmid)";
-            $params["{$prefix}gmid"] = $groupid;
+            if ($groupid == -3) {
+                $joins[] = "LEFT JOIN {groups_members} {$prefix}gm ON {$prefix}gm.userid = {$prefix}u.id";
+                $wheres[] = "{$prefix}gm.groupid IS NULL";
+            } else {
+                $joins[] = "JOIN {groups_members} {$prefix}gm ON ({$prefix}gm.userid = {$prefix}u.id AND {$prefix}gm.groupid = :{$prefix}gmid)";
+                $params["{$prefix}gmid"] = $groupid;
+            }
         }
     }
 
@@ -3920,10 +3930,14 @@ function get_users_by_capability(context $context, $capability, $fields = '', $s
 
     // Groups
     if ($groups) {
-        $groups = (array)$groups;
-        list($grouptest, $grpparams) = $DB->get_in_or_equal($groups, SQL_PARAMS_NAMED, 'grp');
-        $grouptest = "u.id IN (SELECT userid FROM {groups_members} gm WHERE gm.groupid $grouptest)";
-        $params = array_merge($params, $grpparams);
+        if ($groups == -3) {
+            $grouptest = "u.id NOT IN (SELECT userid FROM {groups_members} gm)";
+        } else {
+            $groups = (array)$groups;
+            list($grouptest, $grpparams) = $DB->get_in_or_equal($groups, SQL_PARAMS_NAMED, 'grp');
+            $grouptest = "u.id IN (SELECT userid FROM {groups_members} gm WHERE gm.groupid $grouptest)";
+            $params = array_merge($params, $grpparams);
+        }
 
         if ($useviewallgroups) {
             $viewallgroupsusers = get_users_by_capability($context, 'moodle/site:accessallgroups', 'u.id, u.id', '', '', '', '', $exceptions);

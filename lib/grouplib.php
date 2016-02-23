@@ -729,6 +729,10 @@ function groups_print_activity_menu($cm, $urlroot, $return=false, $hideallpartic
 
     $groupsmenu += groups_sort_menu_options($allowedgroups, $usergroups);
 
+    if ((!$allowedgroups or $groupmode == VISIBLEGROUPS or $aag)) {
+        $groupsmenu[-3] = get_string('notgroupmember');
+    }
+
     if ($groupmode == VISIBLEGROUPS) {
         $grouplabel = get_string('groupsvisible');
     } else {
@@ -818,7 +822,8 @@ function groups_get_course_group($course, $update=false, $allowedgroups=null) {
  * @param stdClass|cm_info $cm course module object
  * @param bool $update change active group if group param submitted
  * @param array $allowedgroups list of groups user may access (INTERNAL, to be used only from groups_print_activity_menu())
- * @return mixed false if groups not used, int if groups used, 0 means all groups (access must be verified in SEPARATE mode)
+ * @return mixed false if groups not used, int if groups used, 0 means all groups (access must be verified in SEPARATE mode),
+ *    -3 means not a members of any group
  */
 function groups_get_activity_group($cm, $update=false, $allowedgroups=null) {
     global $USER, $SESSION;
@@ -853,6 +858,10 @@ function groups_get_activity_group($cm, $update=false, $allowedgroups=null) {
                 $SESSION->activegroup[$cm->course][$groupmode][$cm->groupingid] = 0;
             }
 
+        } else if ($changegroup == -3) {
+            if ($groupmode == VISIBLEGROUPS or $groupmode === 'aag') {
+                $SESSION->activegroup[$cm->course][$groupmode][$cm->groupingid] = -3;
+            }
         } else {
             if ($allowedgroups and array_key_exists($changegroup, $allowedgroups)) {
                 $SESSION->activegroup[$cm->course][$groupmode][$cm->groupingid] = $changegroup;

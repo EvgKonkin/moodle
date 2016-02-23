@@ -1345,6 +1345,7 @@ $string['notenrolled'] = '{$a} is not enrolled in this course.';
 $string['notenrolledprofile'] = 'This profile is not available because this user is not enrolled in this course.';
 $string['noteusercannotrolldatesoncontext'] = '<strong>Note:</strong> The ability to roll dates when restoring this backup has been disabled because you lack the required permissions.';
 $string['noteuserschangednonetocourse'] = '<strong>Note:</strong> Course users need to be restored when restoring user data (in activities, files or messages). This setting has been changed for you.';
+$string['notgroupmember'] = 'Not a members of any group';
 $string['nothingnew'] = 'No recent activity';
 $string['nothingtodisplay'] = 'Nothing to display';
 $string['notice'] = 'Notice';
