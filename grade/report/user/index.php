@@ -144,7 +144,7 @@ if (has_capability('moodle/grade:viewall', $context)) { //Teachers will see all 
             echo $renderer->graded_users_selector('user', $course, $userid, $currentgroup, $showallusersoptions);
         }
 
-        if ($currentgroup and !groups_is_member($currentgroup, $userid)) {
+        if ($currentgroup and !groups_is_member($currentgroup, $userid) and $currentgroup != -3) {
             echo $OUTPUT->notification(get_string('groupusernotmember', 'error'));
         } else {
             if ($report->fill_table()) {
